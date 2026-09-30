@@ -1,0 +1,784 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Squad 17 — API de Gerenciamento de Backends",
+    "description": "API REST para gerenciamento de backends e tags.\n\nEsta API permite cadastrar, consultar, atualizar e remover backends\ne suas tags associadas. A autenticação é feita via JWT (Keycloak).\n",
+    "contact": {
+      "name": "Squad 17 — SergipeTec",
+      "url": "https://sergipetec.org.br"
+    },
+    "license": { "name": "Uso Interno", "url": "https://sergipetec.org.br" },
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "http://localhost:4010", "description": "Generated server url" }
+  ],
+  "security": [{ "bearerAuth": [] }],
+  "tags": [
+    {
+      "name": "Integração Gitlab",
+      "description": "Operações de integração com o Gitlab para execução de pipelines e verificação de status"
+    },
+    {
+      "name": "Backends",
+      "description": "Operações de gerenciamento de backends"
+    },
+    {
+      "name": "Integração Backend",
+      "description": "Operações de integração com backends externos"
+    },
+    { "name": "Tags", "description": "Operações de gerenciamento de tags" }
+  ],
+  "paths": {
+    "/v1/tags/{id}": {
+      "get": {
+        "tags": ["Tags"],
+        "summary": "Buscar tag por ID",
+        "description": "Retorna os dados de uma tag específica",
+        "operationId": "showTag",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da tag (UUID)",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tag encontrada",
+            "content": {
+              "": { "schema": { "$ref": "#/components/schemas/TagsDTO" } }
+            }
+          },
+          "404": {
+            "description": "Tag não encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Tags"],
+        "summary": "Atualizar tag",
+        "description": "Atualiza os dados de uma tag existente",
+        "operationId": "updateTag",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da tag (UUID)",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TagsUpdateDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Tag atualizada com sucesso",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/TagsDTO" } }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Tag não encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Tags"],
+        "summary": "Deletar tag",
+        "description": "Remove uma tag do sistema",
+        "operationId": "deleteTag",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da tag (UUID)",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Tag deletada com sucesso" },
+          "404": {
+            "description": "Tag não encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/backends/{id}": {
+      "get": {
+        "tags": ["Backends"],
+        "summary": "Buscar backend por ID",
+        "description": "Retorna os dados de um backend específico",
+        "operationId": "showBackend",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do backend (UUID)",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Backend encontrado",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BackendDTO" } }
+            }
+          },
+          "404": {
+            "description": "Backend não encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Backends"],
+        "summary": "Atualizar backend",
+        "description": "Atualiza os dados de um backend existente",
+        "operationId": "updateBackend",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do backend (UUID)",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BackendUpdateDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Backend atualizado com sucesso",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BackendDTO" } }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Backend não encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Backends"],
+        "summary": "Deletar backend",
+        "description": "Remove um backend do sistema",
+        "operationId": "deleteBackend",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do backend (UUID)",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Backend deletado com sucesso" },
+          "404": {
+            "description": "Backend não encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tags": {
+      "get": {
+        "tags": ["Tags"],
+        "summary": "Listar tags",
+        "description": "Retorna todas as tags com paginação",
+        "operationId": "listAllTags",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": { "$ref": "#/components/schemas/Pageable" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de tags retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PageTagsDTO" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Tags"],
+        "summary": "Criar tag",
+        "description": "Cadastra uma nova tag no sistema",
+        "operationId": "createTag",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TagsDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Tag criada com sucesso",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/TagsDTO" } }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/integration/gitlab/{backend_id}/runpipe": {
+      "post": {
+        "tags": ["Integração Gitlab"],
+        "summary": "Executar pipeline no Gitlab",
+        "description": "Inicia a execução de um pipeline específico em um backend integrado ao Gitlab e retorna os detalhes da execução",
+        "operationId": "IntegrationGitlabRunpipe",
+        "parameters": [
+          {
+            "name": "backend_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationRunpipeDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/backends": {
+      "get": {
+        "tags": ["Backends"],
+        "summary": "Listar backends",
+        "description": "Retorna todos os backends com paginação",
+        "operationId": "listAllBackends",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": { "$ref": "#/components/schemas/Pageable" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de backends retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PageBackendDTO" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Backends"],
+        "summary": "Criar backend",
+        "description": "Cadastra um novo backend no sistema",
+        "operationId": "createBackend",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BackendDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Backend criado com sucesso",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BackendDTO" } }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "409": {
+            "description": "Backend com a mesma base URL já existe",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/integration/gitlab/{backend_id}/verificacao": {
+      "get": {
+        "tags": ["Integração Gitlab"],
+        "summary": "Verificar integração com Gitlab",
+        "description": "Realiza uma verificação de integração com o Gitlab e retorna o status da conexão",
+        "operationId": "IntegrationGitlabVerificacao",
+        "parameters": [
+          {
+            "name": "backend_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationVerificacaoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/integration/gitlab/{backend_id}/statuspipe/{pipeline_id}": {
+      "get": {
+        "tags": ["Integração Gitlab"],
+        "summary": "Obter status do pipeline no Gitlab",
+        "description": "Retorna o status de um pipeline específico em um backend integrado ao Gitlab",
+        "operationId": "IntegrationGitlabStatusPipe",
+        "parameters": [
+          {
+            "name": "backend_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationStatusPipeDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/integration/gitlab/versao/validacao/{backend_id}/{pipeline_id}": {
+      "get": {
+        "tags": ["Integração Gitlab"],
+        "summary": "Validar versão do pipeline no Gitlab",
+        "description": "Valida a versão de um pipeline específico em um backend integrado ao Gitlab",
+        "operationId": "IntegrationGitlabVersaoValidacao",
+        "parameters": [
+          {
+            "name": "backend_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "pipeline_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationVersionDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/integration/backend/{id}/status": {
+      "get": {
+        "tags": ["Integração Backend"],
+        "summary": "Testar integração com backend",
+        "description": "Realiza um teste de integração com um backend específico e retorna o status da conexão",
+        "operationId": "testarMock",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationBackendStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TagsUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "type": { "type": "string" }
+        }
+      },
+      "TagsDTO": {
+        "type": "object",
+        "description": "Dados da tag",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID único da tag (gerado automaticamente)",
+            "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da tag",
+            "example": "Produção",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição da tag",
+            "example": "Tag para ambientes de produção",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "description": "Tipo da tag",
+            "example": "Ambiente",
+            "minLength": 1
+          }
+        },
+        "required": ["description", "name", "type"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "integer", "format": "int32" },
+          "message": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        }
+      },
+      "BackendUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "description": { "type": "string" },
+          "status": { "type": "string" },
+          "baseUrl": { "type": "string" },
+          "version": { "type": "string" },
+          "apiNumbers": { "type": "string" },
+          "documentationURL": { "type": "string" },
+          "logsURL": { "type": "string" },
+          "repositoryURL": { "type": "string" },
+          "tagIds": {
+            "type": "array",
+            "items": { "type": "string", "format": "uuid" }
+          }
+        }
+      },
+      "BackendDTO": {
+        "type": "object",
+        "description": "Dados do backend",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID único do backend (gerado automaticamente)",
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição do backend",
+            "example": "API de Pagamentos",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "Status atual do backend",
+            "example": "ATIVO",
+            "minLength": 1
+          },
+          "baseUrl": {
+            "type": "string",
+            "description": "URL base do backend",
+            "example": "https://api.exemplo.com/v1",
+            "minLength": 1
+          },
+          "version": {
+            "type": "string",
+            "description": "Versão do backend",
+            "example": "1.0.0",
+            "minLength": 1
+          },
+          "apiNumbers": {
+            "type": "string",
+            "description": "Quantidade de APIs disponíveis",
+            "example": 5
+          },
+          "documentationURL": {
+            "type": "string",
+            "description": "URL da documentação do backend",
+            "example": "https://docs.exemplo.com"
+          },
+          "logsURL": {
+            "type": "string",
+            "description": "URL de acesso aos logs",
+            "example": "https://logs.exemplo.com"
+          },
+          "repositoryURL": {
+            "type": "string",
+            "description": "URL do repositório de código",
+            "example": "https://github.com/exemplo/api"
+          },
+          "tagIds": {
+            "type": "array",
+            "description": "Lista de IDs das tags associadas (usado no cadastro/atualização)",
+            "items": { "type": "string", "format": "uuid" }
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags associadas ao backend (retornado na consulta)",
+            "items": { "$ref": "#/components/schemas/TagsDTO" },
+            "readOnly": true
+          }
+        },
+        "required": ["baseUrl", "description", "status", "version"]
+      },
+      "IntegrationPipelineDTORunpipe": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int32" },
+          "status": { "type": "string" },
+          "ref": { "type": "string" },
+          "sha": { "type": "string" },
+          "web_url": { "type": "string" }
+        }
+      },
+      "IntegrationRunpipeDTO": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "pipeline": {
+            "$ref": "#/components/schemas/IntegrationPipelineDTORunpipe"
+          }
+        }
+      },
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": { "type": "integer", "format": "int32", "minimum": 0 },
+          "size": { "type": "integer", "format": "int32", "minimum": 1 },
+          "sort": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "PageTagsDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" },
+          "size": { "type": "integer", "format": "int32" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TagsDTO" }
+          },
+          "number": { "type": "integer", "format": "int32" },
+          "sort": { "$ref": "#/components/schemas/SortObject" },
+          "numberOfElements": { "type": "integer", "format": "int32" },
+          "pageable": { "$ref": "#/components/schemas/PageableObject" },
+          "empty": { "type": "boolean" }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": { "type": "integer", "format": "int64" },
+          "sort": { "$ref": "#/components/schemas/SortObject" },
+          "paged": { "type": "boolean" },
+          "unpaged": { "type": "boolean" },
+          "pageNumber": { "type": "integer", "format": "int32" },
+          "pageSize": { "type": "integer", "format": "int32" }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": { "type": "boolean" },
+          "sorted": { "type": "boolean" },
+          "unsorted": { "type": "boolean" }
+        }
+      },
+      "IntegrationVerificacaoDTO": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string" },
+          "gitlab": { "type": "string" },
+          "totalProjetos": { "type": "integer", "format": "int32" }
+        }
+      },
+      "IntegrationStatusPipeDTO": {
+        "type": "object",
+        "properties": {
+          "pipelineId": { "type": "integer", "format": "int32" },
+          "status": { "type": "string" },
+          "ref": { "type": "string" },
+          "sha": { "type": "string" },
+          "web_url": { "type": "string" }
+        }
+      },
+      "ValidationVersionDTO": {
+        "type": "object",
+        "properties": {
+          "backendVersion": { "type": "string" },
+          "gitlabVersion": { "type": "string" },
+          "sameVersions": { "type": "boolean" }
+        }
+      },
+      "IntegrationBackendStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string" },
+          "database": { "type": "string" },
+          "version": { "type": "string" },
+          "apinumber": { "type": "integer", "format": "int32" }
+        }
+      },
+      "PageBackendDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" },
+          "size": { "type": "integer", "format": "int32" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/BackendDTO" }
+          },
+          "number": { "type": "integer", "format": "int32" },
+          "sort": { "$ref": "#/components/schemas/SortObject" },
+          "numberOfElements": { "type": "integer", "format": "int32" },
+          "pageable": { "$ref": "#/components/schemas/PageableObject" },
+          "empty": { "type": "boolean" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "description": "Informe o token JWT obtido do Keycloak",
+        "name": "bearerAuth",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
