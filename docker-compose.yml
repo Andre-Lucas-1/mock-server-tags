@@ -1,0 +1,9 @@
+services:
+  mock-server:
+    image: stoplight/prism:5
+    container_name: mock_server_tags
+    volumes:
+      - ./swagger_back_tag.json:/tmp/swagger_back_tag.json
+    ports:
+      - "127.0.0.1:4010:4010" 
+    command: mock /tmp/swagger_back_tag.json -h 0.0.0.0 -p 4010 --multiprocess=false -v=info

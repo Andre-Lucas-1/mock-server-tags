@@ -13,7 +13,6 @@
   "servers": [
     { "url": "http://localhost:4010", "description": "Generated server url" }
   ],
-  "security": [{ "bearerAuth": [] }],
   "tags": [
     {
       "name": "Integração Gitlab",
